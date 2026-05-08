@@ -1,0 +1,49 @@
+name: CodeQL
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  #actions: read
+  #checks: write
+  #contents: read
+  security-events: write # Required for uploads to GHAS
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['go']
+        version:  ['1.26']
+        query:    ['security-extended', 'security-and-quality']
+
+    steps:
+      - name: Clone
+        run: git clone https://codeberg.org/miekg/dns.git .
+
+      - name: Setup
+        uses: actions/setup-go@v6
+        with:
+          go-version: ${{ matrix.language }}
+
+      - name: Build
+        run: go build ./...
+
+#      - name: Autobuild
+#        id: autobuild
+#        uses: github/codeql-action/autobuild@v4
+
+      - name: Initialization 
+        uses: github/codeql-action/init@v4
+        with:
+          languages:  ${{ matrix.language }}
+          queries: ${{ matrix.query }}
+          #source-root: src
+
+      - name: Analysis
+        uses: github/codeql-action/analyze@v4
+        # Auto-runs upload-sarif (ref. https://github.com/github/codeql-action/#usage)
