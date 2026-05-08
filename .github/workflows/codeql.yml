@@ -51,10 +51,15 @@ jobs:
         with:
           upload: false # Default auto-runs upload-sarif (ref. https://github.com/github/codeql-action/#usage)
 
+#      - name: Upload
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: codeql-sarif-${{ matrix.language }}
+#          path: ${{ steps.analyze.outputs.sarif-output }}
+#          retention-days: 90
+#          if-no-files-found: warn﻿
+
       - name: Upload
-        uses: actions/upload-artifact@v4
+        uses: github/codeql-action/upload-sarif@v4
         with:
-          name: codeql-sarif-${{ matrix.language }}
-          path: ${{ steps.analyze.outputs.sarif-output }}
-          retention-days: 90
-          if-no-files-found: warn﻿
+          sarif_file: ${{ steps.analyze.outputs.sarif-output }}
