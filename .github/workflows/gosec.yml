@@ -24,10 +24,8 @@ jobs:
       uses: actions/download-artifact@v8
       with:
         name: build
-        path: submodule
 
     - name: Scan
       uses: securego/gosec@master
-      working-directory: ./submodule
       with:
         args: ./... -show-ignored -verbose text
