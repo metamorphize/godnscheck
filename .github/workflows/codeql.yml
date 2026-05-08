@@ -7,13 +7,14 @@ on:
 permissions:
   #actions: read
   #checks: write
-  #contents: read
+  contents: read
   security-events: write # Required for uploads to GHAS
 
 jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: false
       matrix:
