@@ -8,8 +8,12 @@ permissions:
   security-events: write # Required for uploads to GHAS
 
 jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+
   analyze:
     name: Analyze
+    needs: build
     runs-on: ubuntu-latest
 
     strategy:
@@ -22,6 +26,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v6
 
+    - name: List
+      run: ls -R
     - name: Artifact
       uses: actions/download-artifact@v8
       with:

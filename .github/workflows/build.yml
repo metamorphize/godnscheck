@@ -1,0 +1,41 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+      with:
+        submodules: recursive
+        fetch-depth: 0
+
+    - name: Setup
+      uses: actions/setup-go@v6
+      with:
+        go-version: '1.26'
+
+    - name: Build
+      working-directory: ./submodule
+      run: |
+        go mod download
+        go build ./...
+
+    - name: Upload
+      uses: actions/upload-artifact@v7
+      with:
+        name: build
+        path: submodule
+        if-no-files-found: error
+        retention-days: 1
+
+#    - uses: actions/download-artifact@v8
+#      with:
+#        name: build # Optional
+#        path: submodule
