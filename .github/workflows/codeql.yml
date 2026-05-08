@@ -24,7 +24,11 @@ jobs:
 
     steps:
       - name: Clone
-        run: git clone https://codeberg.org/miekg/dns.git .
+        id: clone
+        run: |
+          git clone https://codeberg.org/miekg/dns.git .
+          echo "sha=$(git rev-parse HEAD)"              >> $GITHUB_OUTPUT
+          echo "ref=$(git rev-parse --abbrev-ref HEAD)" >> $GITHUB_OUTPUT
 
       - name: Setup
         uses: actions/setup-go@v6
@@ -63,4 +67,5 @@ jobs:
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: ${{ steps.analyze.outputs.sarif-output }}
-          commit_sha: ${{ github.sha }}
+          sha: ${{ steps.clone.outputs.sha }}
+          ref: ${{ steps.clone.outputs.ref }}
