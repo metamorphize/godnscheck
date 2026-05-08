@@ -5,9 +5,6 @@ on:
   workflow_call:
 
 permissions:
-  #actions: read
-  #checks: write
-  contents: read
   security-events: write # Required for uploads to GHAS
 
 jobs:
@@ -19,53 +16,29 @@ jobs:
       fail-fast: false
       matrix:
         language: ['go']
-        version:  ['1.26']
         query:    ['security-extended, security-and-quality']
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          submodules: recursive
-          fetch-depth: 0
+    - name: Checkout
+      uses: actions/checkout@v6
 
-      - name: Setup
-        uses: actions/setup-go@v6
-        with:
-          go-version: ${{ matrix.version }}
+    - name: Artifact
+      uses: actions/download-artifact@v8
+      with:
+        name: build
+    - name: List
+      run: ls -R
 
-      - name: Build
-        working-directory: ./submodule
-        run: |
-          go mod download
-          go build ./...
+    - name: Initialization 
+      uses: github/codeql-action/init@v4
+      with:
+        languages:  ${{ matrix.language }}
+        queries: ${{ matrix.query }}
+        #source-root: src
 
-#      - name: Autobuild
-#        id: autobuild
-#        uses: github/codeql-action/autobuild@v4
-
-      - name: Initialization 
-        uses: github/codeql-action/init@v4
-        with:
-          languages:  ${{ matrix.language }}
-          queries: ${{ matrix.query }}
-          #source-root: src
-
-      - name: Analysis
-        id: analyze
-        uses: github/codeql-action/analyze@v4
-        with:
-          sha: ${{ github.sha }}
-          ref: ${{ github.ref }}
-          #upload: false # Default auto-runs upload-sarif (ref. https://github.com/github/codeql-action/#usage)
-
-#      - name: Upload
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: codeql-sarif-${{ matrix.language }}
-#          path: ${{ steps.analyze.outputs.sarif-output }}
-#          retention-days: 90
-#          if-no-files-found: warn﻿
+    - name: Analysis
+      id: analyze
+      uses: github/codeql-action/analyze@v4
 
 #      - name: Upload
 #        uses: github/codeql-action/upload-sarif@v4

@@ -1,0 +1,12 @@
+name: Build
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  codeql:
+    uses: ./.github/workflows/codeql.yml
