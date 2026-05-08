@@ -26,6 +26,12 @@ jobs:
         name: build
 
     - name: Scan
+      id: scan
       uses: securego/gosec@master
       with:
-        args: ./... -show-ignored -verbose text
+        args: ./... -fmt sarif -out results.sarif
+
+    - name: Upload
+      uses: github/codeql-action/upload-sarif@v4
+      with:
+        sarif_file: results.sarif
