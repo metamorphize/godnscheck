@@ -28,5 +28,6 @@ jobs:
 
     - name: Scan
       uses: securego/gosec@master
+      working-directory: ./submodule
       with:
-        args: ./submodule -r -show-ignored -verbose text
+        args: ./... -show-ignored -verbose text
