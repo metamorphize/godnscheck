@@ -2,7 +2,17 @@ name: Dependency Review
 
 on:
   workflow_dispatch:
+    inputs:
+      base_ref:
+        type: string
+      head_ref:
+        type: string
   workflow_call:
+    inputs:
+      base_ref:
+        type: string
+      head_ref:
+        type: string
 
 permissions:
   contents: read
@@ -17,11 +27,6 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-      matrix:
-        version:  ['1.26']
-
     steps:
     - name: Checkout
       uses: actions/checkout@v6
@@ -34,3 +39,6 @@ jobs:
       
     - name: Dependency Review
       uses: actions/dependency-review-action@v5
+      with:
+        base_ref: ${{ inputs.base_ref || github.base_ref }}
+        head_ref: ${{ inputs.head_ref || github.head_ref }}
