@@ -7,7 +7,7 @@ on:
 permissions:
   #actions: read
   #checks: write
-  contents: read
+  #contents: read
   security-events: write # Required for uploads to GHAS
 
 jobs:
@@ -46,5 +46,15 @@ jobs:
           #source-root: src
 
       - name: Analysis
+        id: analyze
         uses: github/codeql-action/analyze@v4
-        # Auto-runs upload-sarif (ref. https://github.com/github/codeql-action/#usage)
+        with:
+          upload: false # Default auto-runs upload-sarif (ref. https://github.com/github/codeql-action/#usage)
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: codeql-sarif-${{ matrix.language }}
+          path: ${{ steps.analyze.outputs.sarif-output }}
+          retention-days: 90
+          if-no-files-found: warn﻿
