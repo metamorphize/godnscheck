@@ -3,15 +3,15 @@ name: Dependency Review
 on:
   workflow_dispatch:
     inputs:
-      base_ref:
+      base-ref:
         type: string
-      head_ref:
+      head-ref:
         type: string
   workflow_call:
     inputs:
-      base_ref:
+      base-ref:
         type: string
-      head_ref:
+      head-ref:
         type: string
 
 permissions:
@@ -40,5 +40,5 @@ jobs:
     - name: Dependency Review
       uses: actions/dependency-review-action@v5
       with:
-        base_ref: ${{ inputs.base_ref || github.base_ref }}
-        head_ref: ${{ inputs.head_ref || github.head_ref }}
+        base-ref: ${{ inputs.base-ref || github.base_ref }}
+        head-ref: ${{ inputs.head-ref || github.head_ref }}
