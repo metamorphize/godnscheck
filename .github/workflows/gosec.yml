@@ -27,7 +27,7 @@ jobs:
 
     - name: Scan
       id: scan
-      uses: securego/gosec@v2
+      uses: securego/gosec@master
       with:
         args: -no-fail -fmt sarif -out results.sarif ./...
 
