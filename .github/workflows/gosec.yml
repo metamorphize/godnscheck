@@ -4,6 +4,9 @@ on:
   workflow_dispatch:
   workflow_call:
 
+permissions:
+  security-events: write # Required for uploads to GHAS
+
 jobs:
   build:
     uses: ./.github/workflows/build.yml
